@@ -4,7 +4,7 @@ import os
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-# Load environment variables from .env file
+# Load environment variables from .env file (for local use)
 load_dotenv()
 
 # Set up Flask
@@ -36,6 +36,19 @@ def verify_token(token):
             return TOKENS[token]
     return None
 
+# Helper function to find a channel ID by name
+def find_channel_id(channel_name):
+    response = client.conversations_list(limit=100, types="public_channel,private_channel")
+    channels = response['channels']
+    while response.get('response_metadata', {}).get('next_cursor'):
+        response = client.conversations_list(cursor=response['response_metadata']['next_cursor'], types="public_channel,private_channel")
+        channels.extend(response['channels'])
+
+    for channel in channels:
+        if channel["name"] == channel_name:
+            return channel["id"]
+    return None
+
 # Flask route to handle incoming JSON data and post message to Slack
 @app.route('/send-slack-message', methods=['POST'])
 def send_slack_message():
@@ -49,7 +62,7 @@ def send_slack_message():
 
     # Extract message details from the request
     data = request.json
-    channel_name = data.get('channel_name', 'testing')
+    channel_name = data.get('channel_name', 'testing')  # Default to 'testing' if no channel_name provided
     message_text = data.get('message', 'No message provided.')
 
     # Find the channel ID by name
@@ -66,21 +79,8 @@ def send_slack_message():
     # Return the result
     return jsonify({'result': result.data}), 200
 
-# Helper function to find a channel ID by name
-def find_channel_id(channel_name):
-    response = client.conversations_list(limit=100, types="public_channel,private_channel")
-    channels = response['channels']
-    while response.get('response_metadata', {}).get('next_cursor'):
-        response = client.conversations_list(cursor=response['response_metadata']['next_cursor'], types="public_channel,private_channel")
-        channels.extend(response['channels'])
-
-    for channel in channels:
-        if channel["name"] == channel_name:
-            return channel["id"]
-    return None
-
 # Run the Flask app
 if __name__ == '__main__':
-    # Get the port from the environment (Render sets it automatically)
-    port = int(os.environ.get('PORT', 5000))  # Default to 5000 for local testing
+    # Get the port from Render's environment (Render sets it automatically)
+    port = int(os.environ.get('PORT', 5000))  # Render automatically sets the port
     app.run(host='0.0.0.0', port=port)
