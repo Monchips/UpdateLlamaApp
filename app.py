@@ -16,8 +16,8 @@ client = WebClient(token=SLACK_BOT_TOKEN)
 
 # Access the Bearer tokens from environment variables
 TOKENS = {
-    os.getenv('USER1_TOKEN'): "Esteban",
-    os.getenv('USER2_TOKEN'): "Renato",
+    os.getenv('Esteban'): "Esteban",
+    os.getenv('Renato'): "Renato",
     os.getenv('USER3_TOKEN'): "User3",
     os.getenv('USER4_TOKEN'): "User4",
     os.getenv('USER5_TOKEN'): "User5",
@@ -48,6 +48,11 @@ def find_channel_id(channel_name):
         if channel["name"] == channel_name:
             return channel["id"]
     return None
+
+# Test route to ensure the app is running
+@app.route('/')
+def home():
+    return "Hello from Flask on Render!"
 
 # Flask route to handle incoming JSON data and post message to Slack
 @app.route('/send-slack-message', methods=['POST'])
