@@ -81,4 +81,6 @@ def find_channel_id(channel_name):
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    # Get the port from the environment (Render sets it automatically)
+    port = int(os.environ.get('PORT', 5000))  # Default to 5000 for local testing
+    app.run(host='0.0.0.0', port=port)
