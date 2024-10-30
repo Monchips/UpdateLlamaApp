@@ -22,8 +22,8 @@ TOKENS = {
     os.getenv('Roy'): "Roy",
     os.getenv('Estefano'): "Estefano",
     os.getenv('Ernesto'): "Ernesto",
-    os.getenv('USER7_TOKEN'): "User7",
-    os.getenv('USER8_TOKEN'): "User8",
+    os.getenv('Willy'): "Willy",
+    os.getenv('Brendon'): "Brendon",
     os.getenv('USER9_TOKEN'): "User9",
     os.getenv('USER10_TOKEN'): "User10"
 }
@@ -78,7 +78,7 @@ def send_slack_message():
     # Send the message to the found channel ID
     result = client.chat_postMessage(
         channel=conversation_id,
-        text=f"{user} says: {message_text}"
+        text=f"{user}: {message_text}"
     )
 
     # Return the result
