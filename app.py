@@ -25,7 +25,8 @@ TOKENS = {
     os.getenv('Willy'): "Willy",
     os.getenv('Brendon'): "Brendon",
     os.getenv('USER9_TOKEN'): "User9",
-    os.getenv('USER10_TOKEN'): "User10"
+    os.getenv('USER10_TOKEN'): "User10",
+    os.getenv('LATAM-AlertService'): "LATAM-AlertService"
 }
 
 # Helper function to verify the Bearer token
